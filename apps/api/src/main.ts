@@ -2,6 +2,9 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
+import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -18,6 +21,9 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
+  app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalInterceptors(new LoggingInterceptor(), new TransformInterceptor());
 
   app.setGlobalPrefix('api/v1');
 
@@ -38,8 +44,9 @@ async function bootstrap() {
   const port = process.env.PORT || 3001;
   await app.listen(port);
 
-  console.log(`🚀 Fatal Model API rodando em: http://localhost:${port}`);
-  console.log(`📚 Documentação disponível em: http://localhost:${port}/api/docs`);
+  console.log(`\n🚀 Fatal Model API rodando em: http://localhost:${port}`);
+  console.log(`📚 Documentação Swagger em: http://localhost:${port}/api/docs`);
+  console.log(`✅ Sprint 1 - Sistema de autenticação ativo\n`);
 }
 
 bootstrap();

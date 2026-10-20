@@ -3,11 +3,11 @@
 ## Informações do Projeto
 
 **Nome:** Fatal Model  
-**Versão:** 0.1.0  
+**Versão:** 0.2.0  
 **Status:** DESENVOLVIMENTO  
-**Última Atualização:** 16/09/2026  
-**Fase Atual:** Sprint 0 - Setup Inicial  
-**Sprint Atual:** 0
+**Última Atualização:** 20/10/2026  
+**Fase Atual:** Sprint 1 - Fundação  
+**Sprint Atual:** 1
 
 ---
 
@@ -171,85 +171,85 @@ admin.local    → Dashboard administrativo
 
 ---
 
-## 📊 Sprint Atual - Sprint 0: Setup Inicial
+## 📊 Sprint Atual - Sprint 1: Fundação
 
 ### Objetivo
-Criar a estrutura base do projeto e configurar o ambiente de desenvolvimento.
+Implementar a fundação do sistema com autenticação, autorização e gestão de usuários.
 
 ### Checklist
 
-**Infrastructure:**
-- [x] Criar estrutura de monorepo
-- [ ] Configurar Docker e docker-compose
-- [ ] Setup de environments (.env)
-- [ ] Documentação de setup
+**Authentication & Authorization:**
+- [x] Sistema de autenticação JWT
+- [x] Refresh tokens
+- [x] RBAC (Role-Based Access Control)
+- [x] Password hashing (bcrypt)
+- [x] Guards personalizados (JwtAuthGuard, RolesGuard)
+- [x] Decorators (@Public, @Roles, @CurrentUser)
+- [ ] Email verification (próximo)
+- [ ] Password reset (próximo)
 
-**Frontend:**
-- [ ] Setup Next.js
-- [ ] Configurar Tailwind CSS
-- [ ] Estrutura de pastas
-- [ ] Configuração de paths (@/)
+**Core Features:**
+- [x] User CRUD completo
+- [x] Audit logging system
+- [x] Error handling global (HttpExceptionFilter)
+- [x] Logging estruturado (LoggingInterceptor)
+- [x] Response transformation (TransformInterceptor)
+- [x] API documentation (Swagger)
+- [x] Validation pipes
+- [x] Rate limiting
 
-**Backend:**
-- [ ] Setup NestJS
-- [ ] Configurar estrutura modular
-- [ ] Setup de variáveis de ambiente
-- [ ] Configuração de logging
+**Testing:**
+- [x] Setup de testes unitários
+- [x] Testes básicos de Auth
+- [ ] Testes E2E (próximo)
+- [ ] Coverage mínimo 80% (próximo)
 
 **Database:**
-- [ ] Setup PostgreSQL
-- [ ] Integrar Prisma ORM
-- [ ] Setup Redis
-- [ ] Docker containers para DBs
+- [x] PrismaService integrado
+- [x] Conexão com PostgreSQL
+- [x] Audit logging funcional
 
-**DevOps:**
-- [ ] Docker e docker-compose configurados
-- [ ] Scripts de desenvolvimento
-- [ ] Health checks
-- [ ] Logs centralizados
-
-### Resultado Esperado
+### Resultado Alcançado
 
 ```
-✅ Monorepo estruturado
-✅ Docker ambiente rodando
-✅ web.local acessível
-✅ api.local acessível
-✅ PostgreSQL funcionando
-✅ Redis funcionando
-✅ Documentação atualizada
+✅ Sistema de autenticação completo (JWT + Refresh)
+✅ RBAC implementado
+✅ User management funcional
+✅ Audit logging ativo
+✅ API totalmente documentada (Swagger)
+✅ Error handling robusto
+✅ Testes unitários básicos
+✅ Logging estruturado
 ```
 
 ---
 
-## 🎯 Próximo Sprint - Sprint 1: Fundação
+## 🎯 Próximo Sprint - Sprint 2: Perfis e Mídias
 
 ### Objetivo
-Implementar a base sólida do sistema (autenticação, autorização, audit logging).
+Implementar gestão de perfis de anunciantes e sistema de upload de mídias.
 
 ### Escopo Planejado
 
-**Authentication & Authorization:**
-- [ ] Sistema de autenticação
-- [ ] JWT + Refresh tokens
-- [ ] RBAC (Role-Based Access Control)
-- [ ] Password hashing (bcrypt)
+**Profile Management:**
+- [ ] Profile CRUD
+- [ ] Profile verification workflow
+- [ ] Profile activation/deactivation
+- [ ] Profile statistics (views, contacts)
+- [ ] Services and pricing management
+
+**Media Management:**
+- [ ] Media upload (fotos e vídeos)
+- [ ] Integration com MinIO/S3
+- [ ] Thumbnails generation
+- [ ] Media moderation workflow
+- [ ] Media ordering/gallery
+
+**Additional Features:**
 - [ ] Email verification
 - [ ] Password reset
-
-**Core Features:**
-- [ ] User model e CRUD
-- [ ] Audit logging system
-- [ ] Error handling global
-- [ ] Logging estruturado
-- [ ] API documentation (Swagger)
-- [ ] Validation pipes
-- [ ] Rate limiting
-
-**Testing:**
-- [ ] Setup de testes unitários
-- [ ] Setup de testes E2E
-- [ ] Coverage mínimo (80%)
+- [ ] Testes E2E completos
+- [ ] Coverage mínimo 80%
 
 ---
 
