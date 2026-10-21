@@ -1,7 +1,8 @@
-import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, ConflictException, BadRequestException, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
+import * as crypto from 'crypto';
 import { PrismaService } from '../../common/prisma/prisma.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
@@ -146,6 +147,185 @@ export class AuthService {
     return {
       accessToken,
       refreshToken,
+    };
+  }
+
+  async sendVerificationEmail(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+
+    if (user.isVerified) {
+      throw new BadRequestException('Email já está verificado');
+    }
+
+    const verificationToken = crypto.randomBytes(32).toString('hex');
+    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 horas
+
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        verificationData: {
+          token: verificationToken,
+          expiresAt: expiresAt.toISOString(),
+        },
+      },
+    });
+
+    console.log(`📧 Verification email enviado para: ${user.email}`);
+    console.log(`🔑 Token de verificação: ${verificationToken}`);
+    console.log(`🔗 Link: http://localhost:3000/verify-email?token=${verificationToken}`);
+
+    await this.prisma.auditLog.create({
+      data: {
+        userId,
+        action: 'VERIFICATION_EMAIL_SENT',
+        resource: 'User',
+        resourceId: userId,
+      },
+    });
+
+    return {
+      message: 'Email de verificação enviado com sucesso',
+      devOnly: {
+        token: verificationToken,
+        link: `http://localhost:3000/verify-email?token=${verificationToken}`,
+      },
+    };
+  }
+
+  async verifyEmail(token: string) {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        verificationData: {
+          path: ['token'],
+          equals: token,
+        },
+      },
+    });
+
+    if (!user) {
+      throw new BadRequestException('Token de verificação inválido');
+    }
+
+    const verificationData = user.verificationData as any;
+    if (new Date() > new Date(verificationData.expiresAt)) {
+      throw new BadRequestException('Token de verificação expirado');
+    }
+
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: {
+        isVerified: true,
+        verificationData: null,
+      },
+    });
+
+    await this.prisma.auditLog.create({
+      data: {
+        userId: user.id,
+        action: 'EMAIL_VERIFIED',
+        resource: 'User',
+        resourceId: user.id,
+      },
+    });
+
+    return {
+      message: 'Email verificado com sucesso',
+      user: this.sanitizeUser(user),
+    };
+  }
+
+  async forgotPassword(email: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (!user) {
+      return {
+        message: 'Se o email existir, você receberá um link de recuperação',
+      };
+    }
+
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const expiresAt = new Date(Date.now() + 1 * 60 * 60 * 1000); // 1 hora
+
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: {
+        verificationData: {
+          resetToken,
+          resetExpiresAt: expiresAt.toISOString(),
+        },
+      },
+    });
+
+    console.log(`📧 Reset password email enviado para: ${user.email}`);
+    console.log(`🔑 Token de reset: ${resetToken}`);
+    console.log(`🔗 Link: http://localhost:3000/reset-password?token=${resetToken}`);
+
+    await this.prisma.auditLog.create({
+      data: {
+        userId: user.id,
+        action: 'PASSWORD_RESET_REQUESTED',
+        resource: 'User',
+        resourceId: user.id,
+      },
+    });
+
+    return {
+      message: 'Se o email existir, você receberá um link de recuperação',
+      devOnly: {
+        token: resetToken,
+        link: `http://localhost:3000/reset-password?token=${resetToken}`,
+      },
+    };
+  }
+
+  async resetPassword(token: string, newPassword: string) {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        verificationData: {
+          path: ['resetToken'],
+          equals: token,
+        },
+      },
+    });
+
+    if (!user) {
+      throw new BadRequestException('Token de reset inválido');
+    }
+
+    const verificationData = user.verificationData as any;
+    if (new Date() > new Date(verificationData.resetExpiresAt)) {
+      throw new BadRequestException('Token de reset expirado');
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: {
+        password: hashedPassword,
+        verificationData: null,
+      },
+    });
+
+    await this.prisma.auditLog.create({
+      data: {
+        userId: user.id,
+        action: 'PASSWORD_RESET_COMPLETED',
+        resource: 'User',
+        resourceId: user.id,
+      },
+    });
+
+    return {
+      message: 'Senha alterada com sucesso',
     };
   }
 

@@ -4,6 +4,9 @@ import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
+import { VerifyEmailDto } from './dto/verify-email.dto';
 import { Public } from './decorators/public.decorator';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -48,5 +51,44 @@ export class AuthController {
   @ApiResponse({ status: 401, description: 'Não autenticado' })
   async getProfile(@CurrentUser() user: any) {
     return this.authService.validateUser(user.userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('send-verification')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Enviar email de verificação' })
+  @ApiResponse({ status: 200, description: 'Email enviado' })
+  @ApiResponse({ status: 400, description: 'Email já verificado' })
+  async sendVerification(@CurrentUser() user: any) {
+    return this.authService.sendVerificationEmail(user.userId);
+  }
+
+  @Public()
+  @Post('verify-email')
+  @ApiOperation({ summary: 'Verificar email com token' })
+  @ApiResponse({ status: 200, description: 'Email verificado' })
+  @ApiResponse({ status: 400, description: 'Token inválido ou expirado' })
+  async verifyEmail(@Body() verifyEmailDto: VerifyEmailDto) {
+    return this.authService.verifyEmail(verifyEmailDto.token);
+  }
+
+  @Public()
+  @Post('forgot-password')
+  @ApiOperation({ summary: 'Solicitar reset de senha' })
+  @ApiResponse({ status: 200, description: 'Email de reset enviado' })
+  async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
+    return this.authService.forgotPassword(forgotPasswordDto.email);
+  }
+
+  @Public()
+  @Post('reset-password')
+  @ApiOperation({ summary: 'Resetar senha com token' })
+  @ApiResponse({ status: 200, description: 'Senha alterada' })
+  @ApiResponse({ status: 400, description: 'Token inválido ou expirado' })
+  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+    return this.authService.resetPassword(
+      resetPasswordDto.token,
+      resetPasswordDto.newPassword,
+    );
   }
 }

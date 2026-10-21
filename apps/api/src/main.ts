@@ -30,10 +30,11 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Fatal Model API')
     .setDescription('API do marketplace Fatal Model com IA, confiança e privacidade')
-    .setVersion('0.1.0')
+    .setVersion('0.3.0')
     .addTag('auth', 'Autenticação e autorização')
     .addTag('users', 'Gestão de usuários')
-    .addTag('profiles', 'Gestão de perfis')
+    .addTag('profiles', 'Gestão de perfis de anunciantes')
+    .addTag('media', 'Upload e gestão de mídias')
     .addTag('search', 'Busca e descoberta')
     .addBearerAuth()
     .build();
@@ -46,7 +47,7 @@ async function bootstrap() {
 
   console.log(`\n🚀 Fatal Model API rodando em: http://localhost:${port}`);
   console.log(`📚 Documentação Swagger em: http://localhost:${port}/api/docs`);
-  console.log(`✅ Sprint 1 - Sistema de autenticação ativo\n`);
+  console.log(`✅ Sprint 2 - Perfis e Mídias ativos\n`);
 }
 
 bootstrap();
