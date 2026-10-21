@@ -3,11 +3,11 @@
 ## Informações do Projeto
 
 **Nome:** Fatal Model  
-**Versão:** 0.2.0  
+**Versão:** 0.3.0  
 **Status:** DESENVOLVIMENTO  
-**Última Atualização:** 20/10/2026  
-**Fase Atual:** Sprint 1 - Fundação  
-**Sprint Atual:** 1
+**Última Atualização:** 21/10/2026  
+**Fase Atual:** Sprint 2 - Perfis e Mídias  
+**Sprint Atual:** 2
 
 ---
 
@@ -171,85 +171,100 @@ admin.local    → Dashboard administrativo
 
 ---
 
-## 📊 Sprint Atual - Sprint 1: Fundação
+## 📊 Sprint Atual - Sprint 2: Perfis e Mídias
 
 ### Objetivo
-Implementar a fundação do sistema com autenticação, autorização e gestão de usuários.
+Implementar gestão de perfis de anunciantes, upload de mídias e funcionalidades de verificação.
 
 ### Checklist
 
-**Authentication & Authorization:**
-- [x] Sistema de autenticação JWT
-- [x] Refresh tokens
-- [x] RBAC (Role-Based Access Control)
-- [x] Password hashing (bcrypt)
-- [x] Guards personalizados (JwtAuthGuard, RolesGuard)
-- [x] Decorators (@Public, @Roles, @CurrentUser)
-- [ ] Email verification (próximo)
-- [ ] Password reset (próximo)
+**Profile Management:**
+- [x] Profile CRUD completo
+- [x] Filtros avançados (busca, localização, status)
+- [x] Sistema de verificação (PENDING/VERIFIED/REJECTED)
+- [x] Estatísticas de perfil
+- [x] Ativação/desativação
+- [x] Permissões por role
+- [x] Audit logging de profiles
 
-**Core Features:**
-- [x] User CRUD completo
-- [x] Audit logging system
-- [x] Error handling global (HttpExceptionFilter)
-- [x] Logging estruturado (LoggingInterceptor)
-- [x] Response transformation (TransformInterceptor)
-- [x] API documentation (Swagger)
-- [x] Validation pipes
-- [x] Rate limiting
+**Media Management:**
+- [x] Upload de fotos (JPEG, PNG, WebP)
+- [x] Upload de vídeos (MP4, WebM, MOV)
+- [x] Integração MinIO/S3
+- [x] Validação de arquivos
+- [x] Sistema de moderação
+- [x] Gestão de ordem de mídias
+- [x] Deleção de arquivos do storage
 
-**Testing:**
-- [x] Setup de testes unitários
-- [x] Testes básicos de Auth
-- [ ] Testes E2E (próximo)
-- [ ] Coverage mínimo 80% (próximo)
+**MinIO/S3:**
+- [x] MinioService global
+- [x] Criação automática de bucket
+- [x] Política pública configurada
+- [x] Upload/download de arquivos
+- [x] Geração de URLs públicas
 
-**Database:**
-- [x] PrismaService integrado
-- [x] Conexão com PostgreSQL
-- [x] Audit logging funcional
+**Email & Password:**
+- [x] Email verification com tokens
+- [x] Reenvio de email de verificação
+- [x] Forgot password
+- [x] Reset password com tokens
+- [x] Tokens seguros (32 bytes)
+- [x] Expiração automática
 
 ### Resultado Alcançado
 
 ```
-✅ Sistema de autenticação completo (JWT + Refresh)
-✅ RBAC implementado
-✅ User management funcional
-✅ Audit logging ativo
-✅ API totalmente documentada (Swagger)
-✅ Error handling robusto
-✅ Testes unitários básicos
-✅ Logging estruturado
+✅ Profiles completos com filtros avançados
+✅ Upload de mídias funcionando
+✅ MinIO/S3 integrado
+✅ Moderação de conteúdo ativa
+✅ Email verification implementado
+✅ Password reset funcionando
+✅ 14 novos endpoints
+✅ Tudo documentado no Swagger
 ```
 
 ---
 
-## 🎯 Próximo Sprint - Sprint 2: Perfis e Mídias
+## 🎯 Próximo Sprint - Sprint 3: Reviews, Favoritos e Busca
 
 ### Objetivo
-Implementar gestão de perfis de anunciantes e sistema de upload de mídias.
+Implementar sistema de avaliações, favoritos e busca básica de perfis.
 
 ### Escopo Planejado
 
-**Profile Management:**
-- [ ] Profile CRUD
-- [ ] Profile verification workflow
-- [ ] Profile activation/deactivation
-- [ ] Profile statistics (views, contacts)
-- [ ] Services and pricing management
+**Reviews & Ratings:**
+- [ ] Review CRUD
+- [ ] Rating system (1-5 stars)
+- [ ] Comentários de clientes
+- [ ] Moderação de reviews
+- [ ] Average rating calculation
+- [ ] Review replies (opcional)
 
-**Media Management:**
-- [ ] Media upload (fotos e vídeos)
-- [ ] Integration com MinIO/S3
-- [ ] Thumbnails generation
-- [ ] Media moderation workflow
-- [ ] Media ordering/gallery
+**Favorites System:**
+- [ ] Add/remove favorites
+- [ ] List user favorites
+- [ ] Favorite counts per profile
+- [ ] Notifications (futuro)
 
-**Additional Features:**
-- [ ] Email verification
-- [ ] Password reset
+**Basic Search:**
+- [ ] Text search (name, description)
+- [ ] Filter by location
+- [ ] Filter by rating
+- [ ] Filter by verification status
+- [ ] Sort by relevance/date/rating
+- [ ] Pagination
+
+**Analytics & Dashboard:**
+- [ ] Profile analytics
+- [ ] View/contact metrics
+- [ ] Rating history
+- [ ] Performance reports
+
+**Additional:**
 - [ ] Testes E2E completos
 - [ ] Coverage mínimo 80%
+- [ ] Performance optimization
 
 ---
 
